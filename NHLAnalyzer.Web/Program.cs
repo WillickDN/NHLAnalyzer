@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NHLAnalyzer.Data;
 using NHLAnalyzer.Management.Services;
@@ -14,7 +15,19 @@ namespace NHLAnalyzer.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            // Set up the DB Connection
+            var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionStringBuilder = new SqlConnectionStringBuilder(defaultConnectionString)
+            {
+                // Use User Secrets for this information.
+                // See: https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows#string-replacement-with-secrets
+                Password = builder.Configuration["DbPassword"],
+                UserID = builder.Configuration["DbUserId"],
+                DataSource = builder.Configuration["DbDataSource"]
+            };
+            var connectionString = connectionStringBuilder.ConnectionString;
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
