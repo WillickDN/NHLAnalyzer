@@ -8,16 +8,16 @@ namespace NHLAnalyzer.Data.Models
     /// <remarks>
     /// /// Found at: https://www.rotowire.com/hockey/stats.php
     /// </remarks>
-    internal class PlayerStatModel
+    public class PlayerStatModel
     {
         [Name("Player Name")]
-        public string? PlayerName { get; set; }
+        public string PlayerName { get; set; }
 
         [Name("Team")]
-        public string? Team { get; set; }
+        public string Team { get; set; }
 
         [Name("Pos")]
-        public string? Position { get; set; }
+        public string Position { get; set; }
 
         [Name("Games")]
         public int GamesPlayed { get; set; }

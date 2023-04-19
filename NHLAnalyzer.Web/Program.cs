@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NHLAnalyzer.Data;
+using NHLAnalyzer.Data.Seeding;
 using NHLAnalyzer.Management.Services;
 using NHLAnalyzer.Web.Areas.Identity;
 
@@ -56,10 +57,14 @@ namespace NHLAnalyzer.Web
             var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
             using (var scope = scopeFactory.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                if (db.Database.EnsureCreated())
+                var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                ctx.Database.Migrate();
+
+                // Little hack to see if we seeded the data already
+                if (!ctx.Players.Any())
                 {
-                    //SeedData.Initialize(db);
+                    SeedData.Initialize(Directory.GetCurrentDirectory(), ctx);
                 }
             }
 
