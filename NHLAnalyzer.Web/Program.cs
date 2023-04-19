@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NHLAnalyzer.Data;
+using NHLAnalyzer.Management.Services;
 using NHLAnalyzer.Web.Areas.Identity;
-using NHLAnalyzer.Web.Data;
 
 namespace NHLAnalyzer.Web
 {

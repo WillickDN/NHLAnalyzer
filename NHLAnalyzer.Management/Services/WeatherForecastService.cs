@@ -1,4 +1,6 @@
-namespace NHLAnalyzer.Web.Data
+using NHLAnalyzer.Data.Entities;
+
+namespace NHLAnalyzer.Management.Services
 {
     public class WeatherForecastService
     {
