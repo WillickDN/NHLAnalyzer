@@ -40,7 +40,9 @@ namespace NHLAnalyzer.Web
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
             // Inject Services
+            builder.Services.AddTransient<IPlayerRankingService, PlayerRankingService>();
             builder.Services.AddTransient<IPlayerSeasonService, PlayerSeasonService>();
+            builder.Services.AddTransient<ISeasonService, SeasonService>();
 
             var app = builder.Build();
 

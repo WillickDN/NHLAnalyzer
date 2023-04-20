@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NHLAnalyzer.Data;
+﻿using NHLAnalyzer.Data;
 using NHLAnalyzer.Data.Entities;
 using NHLAnalyzer.Management.Services.Interfaces;
 
 namespace NHLAnalyzer.Management.Services
 {
-    public class PlayerSeasonService : IPlayerSeasonService
+    public class SeasonService : ISeasonService
     {
         #region Member Variables
 
@@ -15,7 +14,7 @@ namespace NHLAnalyzer.Management.Services
 
         #region Constructors
 
-        public PlayerSeasonService(ApplicationDbContext context)
+        public SeasonService(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -24,15 +23,20 @@ namespace NHLAnalyzer.Management.Services
 
         #region Public Methods
 
-        public IQueryable<PlayerSeason> GetPlayerSeasonsByYearAsync(int season)
+        public IEnumerable<Season> GetAllSeasons()
         {
-            return _context.PlayerSeasons.Include(x => x.Season).Include(x => x.Player).Where(x => x.Season.SeasonYear == season);
+            return _context.Seasons;
+        }
+
+        public IEnumerable<int> GetAllSeasonYears()
+        {
+            return _context.Seasons.Select(x => x.SeasonYear);
         }
 
         #endregion
 
         #region Private Methods
 
-        #endregion
+        #endregion        
     }
 }

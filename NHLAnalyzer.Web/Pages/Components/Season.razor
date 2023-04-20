@@ -1,0 +1,55 @@
+﻿@page "/Season"
+
+@using NHLAnalyzer.Data.Entities
+@using NHLAnalyzer.Management.Services.Interfaces
+
+@inject IPlayerSeasonService playerSeasonService
+@inject ISeasonService seasonService
+
+<PageTitle>Player Season</PageTitle>
+
+<h1>Single Season Stats</h1>
+
+<div class="rz-p-sm-12 rz-text-align-left">
+    <RadzenDropDown @bind-Value=@selectedSeason Data=@seasons Change="@OnSeasonSelected"/>
+</div>
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="true" FilterMode="FilterMode.Advanced" 
+                AllowSorting="true"  AllowPaging="true" PageSize="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@players" TItem="PlayerSeason" ColumnWidth="150px" LogicalFilterOperator="LogicalFilterOperator.Or" Style="width: 1000px">
+    <Columns>
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="Player.PlayerName" Title="Name" Frozen="true" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="GamesPlayed" Title="GP"/>
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="Goals" Title="Goals" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="Assists" Title="Assists" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="PlusMinus" Title="+/-" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="Pims" Title="Pims" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="ShotsOnGoal" Title="SOG" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="GameWinningGoals" Title="GWG"  />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="PowerPlayGoals" Title="PPG"  />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="PowerPlayAssists" Title="PPA" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="ShorthandedGoals" Title="SHG"  />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="ShorthandedAssists" Title="SHA" />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="Hits" Title="Hits"  />
+        <RadzenDataGridColumn TItem="PlayerSeason" Property="Blocks" Title="Blocks" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private int selectedSeason;
+    private IQueryable<PlayerSeason> players;
+    private IEnumerable<int> seasons;
+
+    private void OnSeasonSelected()
+    {
+        players = playerSeasonService.GetPlayerSeasonsByYearAsync(selectedSeason);
+    }
+
+    protected override void OnInitialized()
+    {                
+        seasons = seasonService.GetAllSeasonYears().OrderByDescending(x => x);
+        selectedSeason = seasons.FirstOrDefault();
+
+        players = playerSeasonService.GetPlayerSeasonsByYearAsync(selectedSeason);
+    }    
+}
