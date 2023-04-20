@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NHLAnalyzer.Data;
 using NHLAnalyzer.Data.Seeding;
 using NHLAnalyzer.Management.Services;
+using NHLAnalyzer.Management.Services.Interfaces;
 using NHLAnalyzer.Web.Areas.Identity;
 
 namespace NHLAnalyzer.Web
@@ -37,7 +38,9 @@ namespace NHLAnalyzer.Web
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            builder.Services.AddSingleton<WeatherForecastService>();
+
+            // Inject Services
+            builder.Services.AddTransient<IPlayerSeasonService, PlayerSeasonService>();
 
             var app = builder.Build();
 
