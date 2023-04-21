@@ -58,6 +58,7 @@ namespace NHLAnalyzer.Data.Models
         [Name("BS")]
         public int Blocks { get; set; }
 
+        [Ignore]
         public int Season { get; set; }
     }
 }

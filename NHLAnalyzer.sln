@@ -3,16 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHLAnalyzer.Web", "NHLAnalyzer.Web\NHLAnalyzer.Web.csproj", "{EA320880-EEC9-4392-8945-EFB81A9E460A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHLAnalyzer.Web", "NHLAnalyzer.Web\NHLAnalyzer.Web.csproj", "{EA320880-EEC9-4392-8945-EFB81A9E460A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHLAnalyzer.Data", "NHLAnalyzer.Data\NHLAnalyzer.Data.csproj", "{7F0D9C0C-559A-413F-B5B3-75A012581FCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHLAnalyzer.Data", "NHLAnalyzer.Data\NHLAnalyzer.Data.csproj", "{7F0D9C0C-559A-413F-B5B3-75A012581FCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHLAnalyzer.Management", "NHLAnalyzer.Management\NHLAnalyzer.Management.csproj", "{9D4C2531-4068-4729-9D8C-5669139F1097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHLAnalyzer.Management", "NHLAnalyzer.Management\NHLAnalyzer.Management.csproj", "{9D4C2531-4068-4729-9D8C-5669139F1097}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EFED61A-7C39-4398-982E-5EC615702B02}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHLAnalyzer.Tests", "NHLAnalyzer.Tests\NHLAnalyzer.Tests.csproj", "{E151C1A3-9B16-464B-AF2F-2271485A679C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{9D4C2531-4068-4729-9D8C-5669139F1097}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D4C2531-4068-4729-9D8C-5669139F1097}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D4C2531-4068-4729-9D8C-5669139F1097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E151C1A3-9B16-464B-AF2F-2271485A679C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E151C1A3-9B16-464B-AF2F-2271485A679C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E151C1A3-9B16-464B-AF2F-2271485A679C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E151C1A3-9B16-464B-AF2F-2271485A679C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
