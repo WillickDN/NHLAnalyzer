@@ -5,12 +5,12 @@ namespace NHLAnalyzer.Tests.DataTests
     public class PlayerStatsCsvReaderTests
     {
 
-        private const string TEST_ASSET_DIRECTORY = @"Assets\PlayerStatsTest\";
+        private const string TEST_ASSET_DIRECTORY = @"Assets/PlayerStatsTest";
         private const string TEST_NO_SEASON_IN_TITLE_FOLDER = @"NoSeasonInTitle";
         private const string TEST_NO_PLAYER_STATS_IN_TITLE_FOLDER = @"NoPlayerStatsInTitle";
         private const string TEST_VALID_FILE_NAMES_FOLDER = @"ValidFileNames";
-        private const string TEST_INCORRECT_INTERNAL_FORMAT_FILE = @"IncorrectInternalFormat\2020_Player_Stats.csv";
-        private const string TEST_VALID_INTERNAL_FORMAT_FILE = @"ValidFileNames\2020_Player_Stats.csv";
+        private const string TEST_INCORRECT_INTERNAL_FORMAT_FILE = @"IncorrectInternalFormat/2020_Player_Stats.csv";
+        private const string TEST_VALID_INTERNAL_FORMAT_FILE = @"ValidFileNames/2020_Player_Stats.csv";
 
         #region GetPlayerStatsCsvPaths
 
@@ -18,7 +18,7 @@ namespace NHLAnalyzer.Tests.DataTests
         public void GetPlayerStatsCsvPaths_FolderWithValidCsvNames_ReturnsCsvPath()
         {
             // Arrange
-            var testDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{TEST_ASSET_DIRECTORY}{TEST_VALID_FILE_NAMES_FOLDER}");
+            var testDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{TEST_ASSET_DIRECTORY}/{TEST_VALID_FILE_NAMES_FOLDER}");
             var csvFilesInDirectoryCount = Directory.GetFiles(testDirectory, "*.csv").Length;
             Assert.True(Directory.Exists(testDirectory));
 
@@ -37,7 +37,7 @@ namespace NHLAnalyzer.Tests.DataTests
         public void GetPlayerStatsCsvPaths_NoPlayerStatsInName_ReturnsEmptyList()
         {
             // Arrange
-            var testDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{TEST_ASSET_DIRECTORY}{TEST_NO_PLAYER_STATS_IN_TITLE_FOLDER}");
+            var testDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{TEST_ASSET_DIRECTORY}/{TEST_NO_PLAYER_STATS_IN_TITLE_FOLDER}");
             Assert.True(Directory.Exists(testDirectory));
 
             // Act
@@ -55,7 +55,7 @@ namespace NHLAnalyzer.Tests.DataTests
         public void GetPlayerStatsCsvPaths_NoSeasonInName_ReturnsEmptyList()
         {
             // Arrange
-            var testDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{TEST_ASSET_DIRECTORY}{TEST_NO_SEASON_IN_TITLE_FOLDER}");
+            var testDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{TEST_ASSET_DIRECTORY}/{TEST_NO_SEASON_IN_TITLE_FOLDER}");
             Assert.True(Directory.Exists(testDirectory));
 
             // Act
