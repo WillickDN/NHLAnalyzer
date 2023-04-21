@@ -66,11 +66,7 @@ namespace NHLAnalyzer.Web
 
                 ctx.Database.Migrate();
 
-                // Little hack to see if we seeded the data already
-                if (!ctx.Players.Any())
-                {
-                    SeedData.Initialize(Directory.GetCurrentDirectory(), ctx);
-                }
+                SeedData.Initialize(Directory.GetCurrentDirectory(), ctx);
             }
 
             app.UseHttpsRedirection();

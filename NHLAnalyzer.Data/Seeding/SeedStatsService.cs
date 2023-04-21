@@ -5,7 +5,7 @@ using NHLAnalyzer.Data.Models;
 
 namespace NHLAnalyzer.Data.Seeding
 {
-    public class PlayerStatsService
+    public class SeedStatsService
     {
         #region Private Members
 
@@ -15,7 +15,7 @@ namespace NHLAnalyzer.Data.Seeding
 
         #region Constructors
 
-        public PlayerStatsService(ApplicationDbContext context)
+        public SeedStatsService(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -24,22 +24,43 @@ namespace NHLAnalyzer.Data.Seeding
 
         #region Public Methods
 
-        public void InsertSingleCsvSeason(FileSeasonInformation season)
+        public int InsertPlayerStatsFromCsvFiles(IEnumerable<FileInfo> seasonFileInfos)
         {
-            var seasonPlayerList = PlayerStatsCsvReader.GetPlayerStatModelsFromFile(season).ToList();
+            var playerStatsInserted = 0;
+            foreach (FileInfo season in seasonFileInfos)
+            {
+                playerStatsInserted += InsertSingleSeasonPlayerStats(season);
+            }
 
-            // Create Season
-            var seasonEntity = GetSeason(season.SeasonYear);
+            return playerStatsInserted;
+        }
 
-            // Create Teams
-            List<string> distinctTeams = seasonPlayerList.Select(x => x.Team).Distinct().ToList();
-            var teamEntities = GetTeams(distinctTeams);
+        public int InsertSingleSeasonPlayerStats(FileInfo seasonFileInformation)
+        {
+            var playerStatsInserted = 0;
+            try
+            {
+                var seasonPlayerList = PlayerStatsCsvReader.GetPlayerStatModelsFromFile(seasonFileInformation).ToList();
 
-            // Create Players
-            var players = GetPlayers(seasonPlayerList);
+                // Create Season
+                var seasonEntity = GetSeason(PlayerStatsCsvReader.GetSeasonFromFileName(seasonFileInformation.Name));
 
-            // Add Player Season
-            InsertPlayerSeasonsIfNotExists(seasonEntity, teamEntities, players, seasonPlayerList);
+                // Create Teams
+                List<string> distinctTeams = seasonPlayerList.Select(x => x.Team).Distinct().ToList();
+                var teamEntities = GetTeams(distinctTeams);
+
+                // Create Players
+                var players = GetPlayers(seasonPlayerList);
+
+                // Add Player Season
+                playerStatsInserted = InsertPlayerSeasonsIfNotExists(seasonEntity, teamEntities, players, seasonPlayerList);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in {nameof(SeedStatsService)} see following message: {Environment.NewLine}{ex.Message}");
+            }
+
+            return playerStatsInserted;
         }
 
         #endregion
@@ -121,7 +142,7 @@ namespace NHLAnalyzer.Data.Seeding
         }
 
         // Add Player Season if it doesn't exist
-        private void InsertPlayerSeasonsIfNotExists(Season seasonEntity, List<Team> teams, List<Player> players, List<PlayerStatModel> playerStatModels)
+        private int InsertPlayerSeasonsIfNotExists(Season seasonEntity, List<Team> teams, List<Player> players, List<PlayerStatModel> playerStatModels)
         {
             var dbPlayerSeason = _context.PlayerSeasons.Include(x => x.Season).ToList();
             var newDbPlayerSeasons = new List<PlayerSeason>();
@@ -141,6 +162,8 @@ namespace NHLAnalyzer.Data.Seeding
                 _context.PlayerSeasons.AddRange(newDbPlayerSeasons);
                 _context.SaveChanges();
             }
+
+            return newDbPlayerSeasons.Count();
         }
 
         private static PlayerSeason GetPlayerSeasonFromPlayerStatModel(Season season, Team team, Player player, PlayerStatModel playerStatModel)

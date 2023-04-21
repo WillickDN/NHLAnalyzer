@@ -10,16 +10,9 @@
 
         public static void Initialize(string webDirecotry, ApplicationDbContext ctx)
         {
-            var directory = Path.Combine(webDirecotry, PLAYER_STATS_FOLDER);
-
-            var fileSeasons = PlayerStatsCsvReader.CreateFileSeasonInformationModels(directory);
-
-            var playerStatsService = new PlayerStatsService(ctx);
-
-            foreach (var season in fileSeasons)
-            {
-                playerStatsService.InsertSingleCsvSeason(season);
-            }
+            var csvFiles = PlayerStatsCsvReader.GetPlayerStatCsvPaths(Path.Combine(webDirecotry, PLAYER_STATS_FOLDER));
+            var playerStatsService = new SeedStatsService(ctx);
+            playerStatsService.InsertPlayerStatsFromCsvFiles(csvFiles);
         }
     }
 }

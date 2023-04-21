@@ -9,7 +9,7 @@ namespace NHLAnalyzer.Data.Seeding
     /// Read CSV files in the proper format to generate Player Stat Models
     /// </summary>
     /// <remarks>
-    /// The CSV files in the folder need to be names {season}_Player_Stats.csv
+    /// The CSV files in the folder need to be named {season}_Player_Stats.csv
     /// The files are expected to have a consistent format based on Rotowire stats and a little bit of manual intervention
     /// </remarks>
     public static class PlayerStatsCsvReader
@@ -23,33 +23,34 @@ namespace NHLAnalyzer.Data.Seeding
 
         #region Public Methods        
 
+
         /// <summary>
-        /// Creates a lit of file season information models with the path to each player stats file and season year
+        /// Returns the path of all CSV files in the given directory that match the expected naming convention
         /// </summary>
+        /// <remarks>
+        /// CSVs should be named {Season}_Player_Stats.csv
+        /// </remarks>
+        /// <param name="directory"></param>
         /// <returns></returns>
-        public static IEnumerable<FileSeasonInformation> CreateFileSeasonInformationModels(string directory)
+        public static IEnumerable<FileInfo> GetPlayerStatCsvPaths(string directory)
         {
-            var fileInformationModels = new List<FileSeasonInformation>();
+            var validCsvFileInfos = new List<FileInfo>();
             if (Directory.Exists(directory))
             {
-                // Only return .csv files from the current directory
-                var csvFilePaths = Directory.EnumerateFiles(directory, $"*{CSV_EXTENSION}", SearchOption.TopDirectoryOnly);
-
-                foreach (var csvFilePath in csvFilePaths)
+                // Get all CSV files in the directory
+                var allCsvPaths = Directory.EnumerateFiles(directory, $"*.csv", SearchOption.TopDirectoryOnly);
+                foreach (var csvFilePath in allCsvPaths)
                 {
-                    if (IsFileValidFormat(new FileInfo(csvFilePath).Name, out var fileSeason))
+                    var fileInfo = new FileInfo(csvFilePath);
+                    // Only grab CSVs named correctly
+                    if (IsFileValidPlayerStatFormat(fileInfo.Name))
                     {
-                        var fileInformation = new FileSeasonInformation()
-                        {
-                            FilePath = csvFilePath,
-                            SeasonYear = fileSeason
-                        };
-                        fileInformationModels.Add(fileInformation);
+                        validCsvFileInfos.Add(fileInfo);
                     }
                 }
             }
 
-            return fileInformationModels;
+            return validCsvFileInfos;
         }
 
         /// <summary>
@@ -57,28 +58,26 @@ namespace NHLAnalyzer.Data.Seeding
         /// </summary>
         /// <param name="fileInformationModel"></param>
         /// <returns></returns>
-        public static List<PlayerStatModel> GetPlayerStatModelsFromFile(FileSeasonInformation fileInformationModel)
+        public static List<PlayerStatModel> GetPlayerStatModelsFromFile(FileInfo fileInfo)
         {
             var result = new List<PlayerStatModel>();
             try
             {
-                // Our model has properties that don't exist in the csv file.
-                // Ensure CsvReader ignores these differences.
-                var csvCongifuration = new CsvConfiguration(CultureInfo.InvariantCulture)
-                {
-                    HeaderValidated = null,
-                    MissingFieldFound = null
-                };
+                var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture);
 
-                using (var reader = new StreamReader(fileInformationModel.FilePath))
-                using (var csv = new CsvReader(reader, csvCongifuration))
+                using (var reader = new StreamReader(fileInfo.FullName))
+                using (var csv = new CsvReader(reader, csvConfiguration))
                 {
                     result = csv.GetRecords<PlayerStatModel>().ToList();
                     foreach (var line in result)
                     {
-                        line.Season = fileInformationModel.SeasonYear;
+                        line.Season = GetSeasonFromFileName(fileInfo.Name);
                     }
                 }
+            }
+            catch (HeaderValidationException headerException)
+            {
+                throw headerException;
             }
             catch (Exception ex)
             {
@@ -88,20 +87,41 @@ namespace NHLAnalyzer.Data.Seeding
             return result;
         }
 
+        /// <summary>
+        /// Returns the season year for the file based on the name of the file
+        /// </summary>
+        /// <remarks>
+        /// Assumes the name begins with the 4 digits of the year
+        /// </remarks>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static int GetSeasonFromFileName(string fileName)
+        {
+            var season = -1;
+            if (int.TryParse(fileName.AsSpan(0, 4), out var parsedSeason))
+            {
+                season = parsedSeason;
+            }
+
+            return season;
+        }
+
         #endregion
 
         #region Private Methods        
 
         /// <summary>
-        /// Determine if the files name is the correct format for our applications use.
+        /// Determine if the files name is the correct format for the seeder to use.
         /// </summary>
+        /// <remarks>
+        /// Expects the file name to begin with the year (4 digits)
+        /// Expects the file to contain the string Player_Stats
+        /// </remarks>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private static bool IsFileValidFormat(string fileName, out int seasonNumber)
+        private static bool IsFileValidPlayerStatFormat(string fileName)
         {
-            // Return 0 for season number if incorrect format
-            seasonNumber = 0;
-            return fileName.Contains(PLAYER_STATS) && int.TryParse(fileName.Substring(0, 4), out seasonNumber);
+            return fileName.Contains(PLAYER_STATS) && int.TryParse(fileName.AsSpan(0, 4), out var _);
         }
 
         #endregion
