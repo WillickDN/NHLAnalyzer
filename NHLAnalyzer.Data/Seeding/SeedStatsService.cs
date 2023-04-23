@@ -163,7 +163,7 @@ namespace NHLAnalyzer.Data.Seeding
                 _context.SaveChanges();
             }
 
-            return newDbPlayerSeasons.Count();
+            return newDbPlayerSeasons.Count;
         }
 
         private static PlayerSeason GetPlayerSeasonFromPlayerStatModel(Season season, Team team, Player player, PlayerStatModel playerStatModel)

@@ -25,17 +25,34 @@ namespace NHLAnalyzer.Management.Services
         #region Public Methods
 
         /// <summary>
-        /// Get all Stats for players who played in the given season.
+        /// Get all stats for players who played in the given season.
         /// </summary>
         /// <param name="season"></param>
         /// <returns></returns>
         public IQueryable<PlayerSeason> GetPlayerSeasonsByYear(int season)
         {
-            return _context.PlayerSeasons.Include(x => x.Season).Include(x => x.Player).Where(x => x.Season.SeasonYear == season).OrderBy(x => x.Player.PlayerName);
+            return _context.PlayerSeasons.Include(x => x.Season)
+                .Include(x => x.Player)
+                .Where(x => x.Season.SeasonYear >= season)
+                .OrderBy(x => x.Player.PlayerName);
         }
 
         /// <summary>
-        /// Get all Stats for players who played in the given season and whose name is matches the search string.
+        /// Get all stats for players who played within the given seasons
+        /// </summary>
+        /// <param name="startSeason"></param>
+        /// <param name="endSeason"></param>
+        /// <returns></returns>
+        public IQueryable<PlayerSeason> GetPlayerSeasonsBetweenYears(int startSeason, int endSeason)
+        {
+            return _context.PlayerSeasons.Include(x => x.Season)
+                .Include(x => x.Player)
+                .Where(x => x.Season.SeasonYear >= startSeason && x.Season.SeasonYear <= endSeason)
+                .OrderBy(x => x.Player.PlayerName);
+        }
+
+        /// <summary>
+        /// Get all stats for players who played in the given season and whose name contains the search string.
         /// </summary>
         /// <param name="playerName"></param>
         /// <param name="season"></param>
@@ -43,6 +60,19 @@ namespace NHLAnalyzer.Management.Services
         public IQueryable<PlayerSeason> SearchPlayerSeasonsByNameAndYear(string playerName, int season)
         {
             var allPlayers = GetPlayerSeasonsByYear(season).ToList();
+            return allPlayers.Where(x => x.Player.PlayerName.Contains(playerName, StringComparison.OrdinalIgnoreCase)).AsQueryable();
+        }
+
+        /// <summary>
+        /// Get all stats for players whoe played between the given seasons and whose name contains the search string.
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <param name="startSeason"></param>
+        /// <param name="endSeason"></param>
+        /// <returns></returns>
+        public IQueryable<PlayerSeason> SearchPlayerSeasonsByNameAndBetweenYears(string playerName, int startSeason, int endSeason)
+        {
+            var allPlayers = GetPlayerSeasonsBetweenYears(startSeason, endSeason).ToList();
             return allPlayers.Where(x => x.Player.PlayerName.Contains(playerName, StringComparison.OrdinalIgnoreCase)).AsQueryable();
         }
 

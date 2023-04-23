@@ -30,7 +30,7 @@ namespace NHLAnalyzer.Management.Services
 
         public IEnumerable<int> GetAllSeasonYears()
         {
-            return _context.Seasons.Select(x => x.SeasonYear);
+            return _context.Seasons.Select(x => x.SeasonYear).OrderByDescending(x => x);
         }
 
         #endregion

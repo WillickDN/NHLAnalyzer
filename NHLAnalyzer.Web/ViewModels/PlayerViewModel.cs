@@ -1,15 +1,10 @@
-﻿using NHLAnalyzer.Data.Entities;
-using NHLAnalyzer.Data.Enums;
-
-namespace NHLAnalyzer.Web.ViewModels
+﻿namespace NHLAnalyzer.Web.ViewModels
 {
     public class PlayerViewModel
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
-
-        public Position Position { get; set; }
 
         public int GamesPlayed { get; set; }
 
@@ -36,14 +31,5 @@ namespace NHLAnalyzer.Web.ViewModels
         public int Hits { get; set; }
 
         public int Blocks { get; set; }
-
-        public string Team { get; set; }
-
-        public double Rating { get; set; }
-
-        public PlayerViewModel(PlayerSeason playerSeason)
-        {
-
-        }
     }
 }

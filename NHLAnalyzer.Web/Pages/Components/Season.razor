@@ -2,87 +2,109 @@
 
 @using NHLAnalyzer.Data.Entities
 @using NHLAnalyzer.Management.Services.Interfaces
+@using NHLAnalyzer.Web.ViewModels;
 
 @inject IPlayerSeasonService playerSeasonService
 @inject ISeasonService seasonService
 
 <PageTitle>Player Season</PageTitle>
 
-<div class="container-fluid">
-    <RadzenText TextStyle="TextStyle.H3" TagName="TagName.H3">Regular Season Player Stats</RadzenText>    
-    <div class="row px-3">
-        <div class="col-3 p-3">
-            <div>
-                <RadzenCard>
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Select Season</RadzenText>
-                    <RadzenDropDown @bind-Value=@selectedSeason Data=@seasons Change="@OnSeasonSelected" />
-                </RadzenCard>
-            </div>
-        </div>
-        <div class="col-3 p-3">
-            <div>
-                <RadzenCard>
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Search For Player Name</RadzenText>
+<RadzenText TextStyle="TextStyle.H4" TextAlign="TextAlign.Center">Regular Season Player Stats</RadzenText>    
+<RadzenRow>
+    <RadzenColumn Size="12" class="rz-p-2">        
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.SpaceEvenly" Wrap="FlexWrap.Wrap">
+                <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+                    <RadzenText TextStyle="TextStyle.Subtitle2">Select Start Season</RadzenText>
+                    <RadzenDropDown @bind-Value=@selectedStartSeason Data=@allSeasons Change="@OnStartSeasonSelected" />
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+                    <RadzenText TextStyle="TextStyle.Subtitle2">Select End Season</RadzenText>
+                    <RadzenDropDown @bind-Value=@selectedEndSeason Data=@endSeasonOptions Change="@OnEndSeasonSelected" />
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+                    <RadzenText TextStyle="TextStyle.Subtitle2">Search For Player Name</RadzenText>
                     <RadzenTextBox Placeholder="Search for player name" Change="@(args => OnSearchBoxChange(args))" />
-                </RadzenCard>
-            </div>
-        </div>
-    </div>    
-    <div class="row px-3">
-        <div class="col-6 p-3">
-            <div>
-                <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="true" FilterMode="FilterMode.Advanced"
-                                AllowSorting="true" AllowPaging="true" PageSize="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                                Data="@players" TItem="PlayerSeason" ColumnWidth="150px" LogicalFilterOperator="LogicalFilterOperator.Or">
-                    <Columns>
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="Player.PlayerName" Title="Name" Frozen="true" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="GamesPlayed" Title="GP" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="Goals" Title="Goals" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="Assists" Title="Assists" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="PlusMinus" Title="+/-" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="Pims" Title="Pims" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="ShotsOnGoal" Title="SOG" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="GameWinningGoals" Title="GWG" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="PowerPlayGoals" Title="PPG" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="PowerPlayAssists" Title="PPA" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="ShorthandedGoals" Title="SHG" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="ShorthandedAssists" Title="SHA" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="Hits" Title="Hits" />
-                        <RadzenDataGridColumn TItem="PlayerSeason" Property="Blocks" Title="Blocks" />
-                    </Columns>
-                </RadzenDataGrid>
-            </div>
-        </div>
-    </div>
-</div>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
+    </RadzenColumn>    
+</RadzenRow>
+
+<RadzenRow>
+    <RadzenColumn Size="12" class="rz-p-2">
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="true" FilterMode="FilterMode.Advanced"
+                        AllowSorting="true" AllowPaging="true" PageSize="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                        Data="@players" TItem="PlayerSeason" ColumnWidth="150px" LogicalFilterOperator="LogicalFilterOperator.Or">
+            <Columns>
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="Player.PlayerName" Title="Name" Frozen="true" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="GamesPlayed" Title="GP" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="Goals" Title="Goals" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="Assists" Title="Assists" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="PlusMinus" Title="+/-" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="Pims" Title="Pims" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="ShotsOnGoal" Title="SOG" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="GameWinningGoals" Title="GWG" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="PowerPlayGoals" Title="PPG" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="PowerPlayAssists" Title="PPA" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="ShorthandedGoals" Title="SHG" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="ShorthandedAssists" Title="SHA" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="Hits" Title="Hits" />
+                <RadzenDataGridColumn TItem="PlayerSeason" Property="Blocks" Title="Blocks" />
+            </Columns>
+        </RadzenDataGrid>
+    </RadzenColumn>
+</RadzenRow>
+
 
 @code {
-    private int selectedSeason;
+
+    private int selectedStartSeason;
+    private int selectedEndSeason;
     private string searchString = string.Empty;
     private IQueryable<PlayerSeason> players;
-    private IEnumerable<int> seasons;
+    private IEnumerable<int> allSeasons;
+    private IEnumerable<int> endSeasonOptions;
 
-    private void OnSeasonSelected()
+    protected override void OnInitialized()
     {
-        // Search for players if search box has data
-        players = string.IsNullOrWhiteSpace(searchString) ? playerSeasonService.GetPlayerSeasonsByYear(selectedSeason) 
-        : players = playerSeasonService.SearchPlayerSeasonsByNameAndYear(searchString, selectedSeason);
+        allSeasons = seasonService.GetAllSeasonYears();
+        selectedStartSeason = allSeasons.FirstOrDefault();
+        selectedEndSeason = selectedStartSeason;
+        SetEndSeasonOptions();
+        SetPlayerList();
+    }
+
+    private void OnStartSeasonSelected()
+    {
+        SetEndSeasonOptions();
+        SetPlayerList();
+    }
+
+    private void OnEndSeasonSelected()
+    {
+        SetPlayerList();
     }
 
     private void OnSearchBoxChange(string value)
     {
         searchString = value;
+        SetPlayerList();
+    }   
 
-        // Search for players if search box has data
-        players = string.IsNullOrWhiteSpace(value) ? playerSeasonService.GetPlayerSeasonsByYear(selectedSeason)
-        : players = playerSeasonService.SearchPlayerSeasonsByNameAndYear(value, selectedSeason);
+    private void SetEndSeasonOptions()
+    {        
+        endSeasonOptions = allSeasons.Where(x => x >= selectedStartSeason);
+        if(!endSeasonOptions.Contains(selectedEndSeason))
+        {
+            selectedEndSeason = selectedStartSeason;
+        }
     }
 
-    protected override void OnInitialized()
-    {                
-        seasons = seasonService.GetAllSeasonYears().OrderByDescending(x => x);
-        selectedSeason = seasons.FirstOrDefault();
-
-        players = playerSeasonService.GetPlayerSeasonsByYear(selectedSeason);
-    }    
+    private void SetPlayerList()
+    {
+        // Search for players if search box has data
+        players = string.IsNullOrWhiteSpace(searchString) ? playerSeasonService.GetPlayerSeasonsBetweenYears(selectedStartSeason, selectedEndSeason)
+        : playerSeasonService.SearchPlayerSeasonsByNameAndBetweenYears(searchString, selectedStartSeason, selectedEndSeason);
+    }
 }
