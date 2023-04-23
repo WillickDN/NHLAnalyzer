@@ -28,6 +28,7 @@ See [Road Map](#road-map) for other plans going forward.
 * Blazor Server App
 * Entity Framework - Code First Migrations
 * Radzen Blazor Components - (https://www.radzen.com/blazor-components/)
+* xUnit Testing
 
 ### Project was created using:
 * A windows machine

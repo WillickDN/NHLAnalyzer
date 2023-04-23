@@ -4,6 +4,8 @@ namespace NHLAnalyzer.Management.Services.Interfaces
 {
     public interface IPlayerSeasonService
     {
-        IQueryable<PlayerSeason> GetPlayerSeasonsByYearAsync(int season);
+        IQueryable<PlayerSeason> GetPlayerSeasonsByYear(int season);
+
+        IQueryable<PlayerSeason> SearchPlayerSeasonsByNameAndYear(string playerName, int season);
     }
 }
