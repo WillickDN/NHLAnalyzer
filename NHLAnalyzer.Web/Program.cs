@@ -24,9 +24,9 @@ namespace NHLAnalyzer.Web
             {
                 // Use User Secrets for this information.
                 // See: https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows#string-replacement-with-secrets
-                Password = builder.Configuration["DbPassword"],
+                DataSource = builder.Configuration["DbDataSource"],
                 UserID = builder.Configuration["DbUserId"],
-                DataSource = builder.Configuration["DbDataSource"]
+                Password = builder.Configuration["DbPassword"]
             };
             var connectionString = connectionStringBuilder.ConnectionString;
 

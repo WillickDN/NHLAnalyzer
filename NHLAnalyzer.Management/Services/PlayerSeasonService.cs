@@ -24,9 +24,26 @@ namespace NHLAnalyzer.Management.Services
 
         #region Public Methods
 
-        public IQueryable<PlayerSeason> GetPlayerSeasonsByYearAsync(int season)
+        /// <summary>
+        /// Get all Stats for players who played in the given season.
+        /// </summary>
+        /// <param name="season"></param>
+        /// <returns></returns>
+        public IQueryable<PlayerSeason> GetPlayerSeasonsByYear(int season)
         {
-            return _context.PlayerSeasons.Include(x => x.Season).Include(x => x.Player).Where(x => x.Season.SeasonYear == season);
+            return _context.PlayerSeasons.Include(x => x.Season).Include(x => x.Player).Where(x => x.Season.SeasonYear == season).OrderBy(x => x.Player.PlayerName);
+        }
+
+        /// <summary>
+        /// Get all Stats for players who played in the given season and whose name is matches the search string.
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <param name="season"></param>
+        /// <returns></returns>
+        public IQueryable<PlayerSeason> SearchPlayerSeasonsByNameAndYear(string playerName, int season)
+        {
+            var allPlayers = GetPlayerSeasonsByYear(season).ToList();
+            return allPlayers.Where(x => x.Player.PlayerName.Contains(playerName, StringComparison.OrdinalIgnoreCase)).AsQueryable();
         }
 
         #endregion
