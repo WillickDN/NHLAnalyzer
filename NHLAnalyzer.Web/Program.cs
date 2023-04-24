@@ -17,7 +17,6 @@ namespace NHLAnalyzer.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             // Set up the DB Connection
             var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             var connectionStringBuilder = new SqlConnectionStringBuilder(defaultConnectionString)
@@ -32,12 +31,13 @@ namespace NHLAnalyzer.Web
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Inject Services
             builder.Services.AddTransient<IPlayerRankingService, PlayerRankingService>();

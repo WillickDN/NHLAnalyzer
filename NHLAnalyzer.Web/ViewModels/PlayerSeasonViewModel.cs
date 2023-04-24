@@ -1,6 +1,6 @@
 ﻿namespace NHLAnalyzer.Web.ViewModels
 {
-    public class PlayerViewModel
+    public class PlayerSeasonViewModel
     {
         public int Id { get; set; }
 
