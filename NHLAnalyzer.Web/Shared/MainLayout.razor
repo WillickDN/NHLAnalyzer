@@ -1,21 +1,31 @@
 ﻿@inherits LayoutComponentBase
 
 <PageTitle>NHL Analyzer</PageTitle>
+<RadzenLayout>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />            
+        </RadzenStack>
+    </RadzenHeader>
 
-    <main>
-@*      Hide login display until its needed  
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-        </div>
-*@        
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Home" Icon="home" Path=""/>
+            <RadzenPanelMenuItem Text="Season" Icon="list" Path="season"/>
+        </RadzenPanelMenu>
+    </RadzenSidebar>
 
-        <article class="content px-4">
+    <RadzenBody>
             @Body
-        </article>
-    </main>
-</div>
+    </RadzenBody>
+
+    <RadzenFooter>
+
+    </RadzenFooter>
+
+</RadzenLayout>
+
+@code {
+    bool sidebarExpanded = true;
+}
